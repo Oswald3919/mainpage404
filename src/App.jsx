@@ -67,18 +67,11 @@ export default function App() {
     tl.fromTo('[data-address]', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 }, 0.4)
     tl.fromTo('[data-error-code]', { scale: 0.8, autoAlpha: 0 }, { scale: 1, autoAlpha: 1 }, 0.5)
     const heroLetters = root.querySelectorAll('.cmd-hero [data-wave-letter]')
-    tl.fromTo(heroLetters, { y: 25, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.02 }, 0.6)
+    tl.fromTo(heroLetters, 
+      { y: 50, opacity: 0, scale: 0.8 }, 
+      { y: 0, opacity: 1, scale: 1, stagger: 0.03, ease: 'expo.out', duration: 1.8 }, 
+    0.4)
 
-    root.querySelectorAll('[data-bubble]').forEach((b, i) => {
-      gsap.to(b, {
-        x: gsap.utils.random(-60, 60),
-        y: gsap.utils.random(-40, 40),
-        duration: 7 + i,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-      })
-    })
   }, { scope: rootRef })
 
   // 2. Glitch loop — re-runs when lang changes (letters re-render)
@@ -135,18 +128,20 @@ export default function App() {
       textTargets.forEach((target, itemIndex) => {
         gsap.fromTo(
           target,
-          { y: 12, autoAlpha: 0.9 },
+          { 
+            y: 40, 
+            autoAlpha: 0 
+          },
           {
             y: 0,
             autoAlpha: 1,
-            duration: 0.32,
-            delay: itemIndex * 0.02,
-            ease: 'power2.out',
+            duration: 1.2,
+            delay: itemIndex * 0.1,
+            ease: 'expo.out',
             overwrite: true,
-            immediateRender: false,
             scrollTrigger: {
               trigger: target,
-              start: 'top 92%',
+              start: 'top 85%',
               once: true,
             },
           }
@@ -227,12 +222,6 @@ export default function App() {
     <div className="shell" ref={rootRef}>
       {/* ── HERO ── */}
       <section className="cmd-hero" data-hero>
-        <div className="cmd-bubbles" aria-hidden="true">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <span key={i} className={`cmd-bubble b${i}`} data-bubble />
-          ))}
-        </div>
-
         <div className="hero-browser">
           {/* Chrome bar */}
           <div className="browser-chrome" data-chrome>
