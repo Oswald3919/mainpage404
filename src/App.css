@@ -5,6 +5,7 @@
   width: 100%;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 /* Highlighted / accented words */
@@ -200,6 +201,7 @@ mark.hl {
   background: var(--bg);
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 .cmd-bubbles {
@@ -433,6 +435,7 @@ mark.hl {
 ═══════════════════════════════════════════════════════ */
 .main {
   background: var(--bg);
+  overflow-x: hidden;
 }
 
 .main > section {
