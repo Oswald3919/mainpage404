@@ -127,37 +127,20 @@ export default function App() {
       const rowItems = Array.from(
         section.querySelectorAll('.signal-item, .flow-row, .focus-item')
       )
+      const targets = [...new Set([...headerItems, ...rowItems])]
 
-      gsap.set(headerItems, { y: 20, autoAlpha: 0 })
-      gsap.to(headerItems, {
-        y: 0,
-        autoAlpha: 1,
+      gsap.from(targets, {
+        y: 18,
+        autoAlpha: 0.92,
         duration: 0.42,
-        stagger: 0.06,
+        stagger: 0.045,
         ease: 'power2.out',
         scrollTrigger: {
           trigger: section,
-          start: 'top 94%',
+          start: 'top 96%',
           once: true,
+          fastScrollEnd: true,
         },
-      })
-
-      rowItems.forEach((item) => {
-        gsap.fromTo(
-          item,
-          { y: 20, autoAlpha: 0 },
-          {
-            y: 0,
-            autoAlpha: 1,
-            duration: 0.38,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: item,
-              start: 'top 94%',
-              once: true,
-            },
-          }
-        )
       })
     })
 
