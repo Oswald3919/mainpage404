@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import './gsap/setup'
 import './App.css'
@@ -114,7 +115,7 @@ export default function App() {
     }
   }, { scope: rootRef, dependencies: [lang] })
 
-  // 3. ScrollTrigger reveals — re-runs when lang changes
+  // 3. ScrollTrigger reveals — re-run when lang changes
   useGSAP(() => {
     const root = rootRef.current
     if (!root) return
@@ -129,12 +130,16 @@ export default function App() {
           duration: 1,
           scrollTrigger: {
             trigger: el,
-            start: 'top 92%',
-            toggleActions: 'play none none none',
+            start: 'top bottom',   // dispara en cuanto entra en pantalla
+            once: true,            // no se revierte al scrollear arriba
           },
         }
       )
     })
+
+    // Refrescar ScrollTrigger para que tome las medidas correctas en móvil
+    const id = setTimeout(() => ScrollTrigger.refresh(), 300)
+    return () => clearTimeout(id)
   }, { scope: rootRef, dependencies: [lang] })
 
   // 4. Portal reveal + magnetic button — runs once

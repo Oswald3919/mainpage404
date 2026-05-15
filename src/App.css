@@ -707,6 +707,8 @@ mark.hl {
 @media (max-width: 1024px) {
   .browser-body {
     grid-template-columns: 1fr;
+    height: auto;        /* reset fixed height from desktop */
+    overflow: visible;   /* evita que se corte el contenido */
   }
 
   .tech-panel {
@@ -781,6 +783,11 @@ mark.hl {
   }
 
   /* Hero content */
+  .browser-body {
+    height: auto;
+    overflow: visible;
+  }
+
   .browser-content {
     padding: 2.5rem 1.5rem 3rem;
   }
