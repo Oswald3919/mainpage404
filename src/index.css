@@ -53,6 +53,7 @@
 html,
 body {
   height: 100%;
+  overflow-x: hidden;
 }
 
 html {
@@ -63,7 +64,6 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
-  overflow-x: clip;
 }
 
 #root {

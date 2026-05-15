@@ -916,7 +916,8 @@ mark.hl {
   .portal-section {
     min-height: 80vh;
     padding: 0 !important;
-    overflow: visible;
+    overflow-x: hidden;
+    overflow-y: visible;
   }
 
   .portal-content {
