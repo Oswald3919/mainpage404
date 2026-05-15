@@ -115,29 +115,36 @@ export default function App() {
     }
   }, { scope: rootRef, dependencies: [lang] })
 
-  // 3. ScrollTrigger reveals — re-run when lang changes
+  // 3. ScrollTrigger reveals - re-run when lang changes
   useGSAP(() => {
     const root = rootRef.current
     if (!root) return
 
-    root.querySelectorAll('[data-reveal]').forEach((el) => {
-      gsap.fromTo(
-        el,
-        { y: 40, autoAlpha: 0 },
-        {
-          y: 0,
-          autoAlpha: 1,
-          duration: 1,
-          scrollTrigger: {
-            trigger: el,
-            start: 'top bottom',   // dispara en cuanto entra en pantalla
-            once: true,            // no se revierte al scrollear arriba
-          },
-        }
+    root.querySelectorAll('[data-reveal]').forEach((section) => {
+      const headerItems = Array.from(section.children).filter(
+        (node) => !node.matches('.signal-strip, .flow-list, .focus-grid')
       )
+      const rowItems = Array.from(
+        section.querySelectorAll('.signal-item, .flow-row, .focus-item')
+      )
+      const targets = [...new Set([...(headerItems.length ? headerItems : section.children), ...rowItems])]
+
+      gsap.set(targets, { y: 28, autoAlpha: 0 })
+      gsap.to(targets, {
+        y: 0,
+        autoAlpha: 1,
+        duration: 0.55,
+        stagger: 0.08,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 88%',
+          once: true,
+        },
+      })
     })
 
-    // Refrescar ScrollTrigger para que tome las medidas correctas en móvil
+    // Refresh after render/layout changes, especially on touch viewport shifts.
     const id = setTimeout(() => ScrollTrigger.refresh(), 300)
     return () => clearTimeout(id)
   }, { scope: rootRef, dependencies: [lang] })
@@ -185,6 +192,18 @@ export default function App() {
     setIsLocked(true)
     setLang((prev) => (prev === 'es' ? 'en' : 'es'))
     setTimeout(() => setIsLocked(false), 700)
+  }
+
+  const handleExploreClick = () => {
+    const firstContent = rootRef.current?.querySelector('#first-content')
+    if (!firstContent) return
+
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(firstContent, { duration: 0.75, offset: -10 })
+      return
+    }
+
+    firstContent.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   const handlePortalClick = (e) => {
@@ -264,7 +283,7 @@ export default function App() {
                 <button
                   id="explore-btn"
                   className="cmd-btn"
-                  onClick={() => lenisRef.current?.scrollTo('#main')}
+                  onClick={handleExploreClick}
                 >
                   {t.explore}
                 </button>
@@ -324,7 +343,7 @@ export default function App() {
       {/* ── MAIN CONTENT ── */}
       <main className="main" id="main">
         {/* Direction */}
-        <section className="story" data-reveal>
+        <section className="story" id="first-content" data-reveal>
           <p className="eyebrow">{t.dirTitle}</p>
           <h2><HighlightText text={t.dirH2} /></h2>
           <p className="lead"><HighlightText text={t.dirLead} /></p>
