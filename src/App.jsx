@@ -115,41 +115,53 @@ export default function App() {
     }
   }, { scope: rootRef, dependencies: [lang] })
 
-  // 3. ScrollTrigger reveals - re-run when lang changes
+  // 3. ScrollTrigger text reveals - re-run when lang changes
   useGSAP(() => {
     const root = rootRef.current
     if (!root) return
 
-    root.querySelectorAll('[data-reveal]').forEach((section) => {
-      const headerItems = Array.from(section.children).filter(
-        (node) => !node.matches('.signal-strip, .flow-list, .focus-grid')
-      )
-      const rowItems = Array.from(
-        section.querySelectorAll('.signal-item, .flow-row, .focus-item')
-      )
-      const targets = [...new Set([...headerItems, ...rowItems])]
+    const allTextTargets = root.querySelectorAll(
+      '[data-reveal] .eyebrow, [data-reveal] h2, [data-reveal] .lead, [data-reveal] .signal-item, [data-reveal] .flow-row, [data-reveal] .focus-item'
+    )
+    // Safety: clear any stale inline styles from previous animation versions/hot reloads.
+    gsap.set(allTextTargets, { clearProps: 'opacity,visibility,transform' })
+    root.querySelectorAll('[data-reveal]').forEach((section, index) => {
+      if (index === 0) return
 
-      gsap.from(targets, {
-        y: 18,
-        autoAlpha: 0.92,
-        duration: 0.42,
-        stagger: 0.045,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: section,
-          start: 'top 96%',
-          once: true,
-          fastScrollEnd: true,
-        },
+      const textTargets = section.querySelectorAll(
+        '.eyebrow, h2, .lead, .signal-item, .flow-row, .focus-item'
+      )
+
+      textTargets.forEach((target, itemIndex) => {
+        gsap.fromTo(
+          target,
+          { y: 12, autoAlpha: 0.9 },
+          {
+            y: 0,
+            autoAlpha: 1,
+            duration: 0.32,
+            delay: itemIndex * 0.02,
+            ease: 'power2.out',
+            overwrite: true,
+            immediateRender: false,
+            scrollTrigger: {
+              trigger: target,
+              start: 'top 92%',
+              once: true,
+            },
+          }
+        )
       })
     })
 
     // Refresh after render/layout changes, especially on touch viewport shifts.
     const id = setTimeout(() => ScrollTrigger.refresh(), 300)
-    return () => clearTimeout(id)
+    return () => {
+      clearTimeout(id)
+    }
   }, { scope: rootRef, dependencies: [lang] })
 
-  // 4. Portal reveal + magnetic button — runs once
+  // 4. Portal reveal + magnetic button â€” runs once
   useGSAP(() => {
     const root = rootRef.current
     if (!root) return
